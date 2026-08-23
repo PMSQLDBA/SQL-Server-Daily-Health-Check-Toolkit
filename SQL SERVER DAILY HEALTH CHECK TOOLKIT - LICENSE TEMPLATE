@@ -1,0 +1,21 @@
+SQL SERVER DAILY HEALTH CHECK TOOLKIT - LICENSE TEMPLATE
+
+Copyright (c) [YEAR] [OWNER / BUSINESS NAME]
+All rights reserved.
+
+IMPORTANT: This is a template, not legal advice. Review and adapt it for your business before publishing.
+
+PERMITTED USE
+The recipient may use and modify the included documentation and scripts for the recipient's own personal or internal business operations.
+
+RESTRICTIONS
+The recipient may not resell, sublicense, redistribute, republish, or make the original or modified package available as a competing downloadable product without written permission from the copyright owner.
+
+NO WARRANTY
+THE MATERIALS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. THE USER IS RESPONSIBLE FOR REVIEWING, TESTING, AND VALIDATING ALL SCRIPTS AND PROCEDURES BEFORE USE, ESPECIALLY IN PRODUCTION ENVIRONMENTS.
+
+LIMITATION OF LIABILITY
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE COPYRIGHT OWNER SHALL NOT BE LIABLE FOR DATA LOSS, SERVICE INTERRUPTION, LOST PROFITS, OR OTHER DAMAGES ARISING FROM USE OF THE MATERIALS.
+
+THIRD-PARTY RIGHTS
+Microsoft, SQL Server, Windows, PowerShell, and other referenced product names may be trademarks of their respective owners. This toolkit is not affiliated with or endorsed by Microsoft unless explicitly stated otherwise.
