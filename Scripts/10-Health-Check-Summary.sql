@@ -74,21 +74,47 @@ INSERT @Results VALUES
 
 -- 5. Transaction log health
 DECLARE @HighLogCount int = 0;
+
 BEGIN TRY
     SELECT @HighLogCount = COUNT(*)
-    FROM sys.databases d
-    CROSS APPLY sys.dm_db_log_stats(d.database_id) ls
-    WHERE d.state_desc='ONLINE' AND ls.used_log_space_in_percent >= 80;
+    FROM sys.databases AS d
+    CROSS APPLY sys.dm_db_log_stats(d.database_id) AS ls
+    WHERE d.state_desc = 'ONLINE'
+      AND d.source_database_id IS NULL
+      AND CASE
+              WHEN ls.total_log_size_mb = 0 THEN 0
+              ELSE (ls.active_log_size_mb * 100.0 / ls.total_log_size_mb)
+          END >= 80;
 END TRY
 BEGIN CATCH
     SET @HighLogCount = -1;
 END CATCH;
-INSERT @Results VALUES
-(5,'Transaction Log Health',
- CASE WHEN @HighLogCount = -1 THEN 'INFO' WHEN @HighLogCount=0 THEN 'PASS' ELSE 'WARNING' END,
- CASE WHEN @HighLogCount = -1 THEN 'Could not evaluate log utilization with current version/permissions.' ELSE CONCAT(@HighLogCount,' database(s) at or above 80% log utilization.') END,
- CASE WHEN @HighLogCount>0 THEN 'Run 06-Transaction-Log-Health.sql and review log reuse waits.' ELSE 'Review detailed script if additional log diagnostics are needed.' END);
 
+INSERT @Results VALUES
+(
+    5,
+    'Transaction Log Health',
+
+    CASE
+        WHEN @HighLogCount = -1 THEN 'INFO'
+        WHEN @HighLogCount = 0 THEN 'PASS'
+        ELSE 'WARNING'
+    END,
+
+    CASE
+        WHEN @HighLogCount = -1
+            THEN 'Could not evaluate log utilization with current version/permissions.'
+        ELSE
+            CONCAT(@HighLogCount, ' database(s) at or above 80% active log utilization.')
+    END,
+
+    CASE
+        WHEN @HighLogCount > 0
+            THEN 'Run 06-Transaction-Log-Health.sql and review log reuse waits.'
+        ELSE
+            'Review detailed script if additional log diagnostics are needed.'
+    END
+);
 -- 6. Blocking
 DECLARE @BlockingCount int = (
     SELECT COUNT(*) FROM sys.dm_exec_requests
